@@ -9,9 +9,13 @@ ImageMetadataGenerator
 
 # Setup (non docker)
 - install uv depedencies
-- place .env in backend/ImageMetadataGeneratorBackend conating openai api key in the form
+- place .env in backend/ImageMetadataGeneratorBackend containing openai api key in the form
 OPENAI_API_KEY="key here"
-- "task run-backend"
+```
+task run-backend
+```
 
 # Setup (docker)
-- "run-backend-docker"
+```
+run-backend-docker
+```
