@@ -7,7 +7,7 @@ from fastapi import APIRouter, FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 
 from imagemetadatageneratorbackend.error_responses import MALFORMED_B64, NO_OPTIONS
-from imagemetadatageneratorbackend.metadata_creation import BadLLMResponseError, call_vision_llm
+from imagemetadatageneratorbackend.metadata_creation import BadLLMResponseError, LLMServiceError, call_vision_llm
 from imagemetadatageneratorbackend.models import (
     MetaDataRequest,
     MetaDataResponse,
@@ -72,7 +72,7 @@ async def metadata_generator(metadata_request_data: MetaDataRequest) -> MetaData
     except Exception as e:
         if isinstance(e, BadLLMResponseError):
             raise HTTPException(status_code=422, detail="Bad LLM response") from e
-        elif isinstance(e, BadLLMResponseError):
+        elif isinstance(e, LLMServiceError):
             raise HTTPException(status_code=502, detail="LLM service error") from e
         else:
             raise HTTPException(status_code=500, detail="Unknown error") from e
