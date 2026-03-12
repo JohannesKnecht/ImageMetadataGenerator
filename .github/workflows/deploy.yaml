@@ -1,0 +1,48 @@
+name: "CICD"
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+
+jobs:
+
+  TestApi:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./backend/imagemetadatageneratorbackend
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Use Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.9'
+
+      - name: Install uv
+        run: |
+          pip install uv
+
+      - name: Check lock
+        run: uv lock --check
+
+      - name: Install Dependencies
+        run: uv sync --frozen --all-extras
+
+      - name: Ruff Lint
+        run: uv run ruff check .
+
+      - name: Ruff Format Check
+        run: uv run ruff format --check .
+
+      - name: Type Check
+        run: uv run ty check
+
+      - name: Run Tests
+        env:
+          # PRs run with mocked LLM calls (empty key); pushes to main use the real API key.
+          OPENAI_API_KEY: ${{ github.event_name == 'push' && secrets.OPENAI_API_KEY || '' }}
+        run: uv run pytest
