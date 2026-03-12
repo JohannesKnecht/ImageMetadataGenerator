@@ -19,3 +19,6 @@ task run-backend
 ```
 run-backend-docker
 ```
+
+# openapi spec
+see openapi.json

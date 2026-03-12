@@ -4,3 +4,4 @@ cicd.json
 __pycache__/
 *.pyc
 *.pyo
+backend/ImageMetadataGeneratorBackend/temp_data
