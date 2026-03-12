@@ -20,7 +20,7 @@ origins = [
     "http://localhost",
 ]
 
-DEBUG = True
+DEBUG = os.environ.get("DEBUG", "false").lower() == "true"
 
 app.add_middleware(
     CORSMiddleware,  # type: ignore[invalid-argument-type]
