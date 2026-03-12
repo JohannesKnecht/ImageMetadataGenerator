@@ -56,6 +56,7 @@ async def metadata_generator(metadata_request_data: MetaDataRequest) -> MetaData
         raise HTTPException(status_code=400, detail=MALFORMED_B64) from e
 
     if DEBUG:
+        os.makedirs("temp_data", exist_ok=True)
         with open("temp_data/img.png", "wb") as f:
             f.write(image_bytes)
 
