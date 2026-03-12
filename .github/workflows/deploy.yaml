@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: ./backend/imagemetadatageneratorbackend
+        working-directory: ./backend/ImageMetadataGeneratorBackend
     steps:
       - uses: actions/checkout@v2
 
