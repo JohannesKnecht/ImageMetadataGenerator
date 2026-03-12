@@ -1,0 +1,46 @@
+version: '3'
+
+tasks:
+  build-backend-docker:
+    cmds:
+      - task: build-image
+        vars:
+          DOCKER_IMAGE: imagemetadatageneratorbackend
+          DOCKER_FILE_PATH: backend/ImageMetadataGeneratorBackend/Dockerfile
+          CONTEXT_PATH: backend/ImageMetadataGeneratorBackend/
+
+  run-backend-docker:
+    cmds:
+      - task: run
+        vars:
+          DOCKER_IMAGE: imagemetadatageneratorbackend
+          DOCKER_FILE_PATH: backend/ImageMetadataGeneratorBackend/Dockerfile
+          CONTEXT_PATH: backend/ImageMetadataGeneratorBackend/
+
+  run-backend:
+    dir: backend/ImageMetadataGeneratorBackend
+    cmds:
+      - uv run fastapi run src/imagemetadatageneratorbackend/main.py
+
+  test-backend:
+    dir: backend/ImageMetadataGeneratorBackend
+    cmds:
+      - uv run pytest
+
+  lint-backend:
+    dir: backend/ImageMetadataGeneratorBackend
+    cmds:
+      - uv run ruff format .
+      - uv run ruff check --fix .
+      - uv run ty check
+
+  build-image:
+    internal: true
+    cmds:
+      - docker build -t {{.DOCKER_IMAGE}} -f {{.DOCKER_FILE_PATH}} ./{{.CONTEXT_PATH}}
+
+  run:
+    internal: true
+    cmds:
+      - docker rm -f {{.DOCKER_IMAGE}} 2>/dev/null
+      - docker run --name {{.DOCKER_IMAGE}} -p 8080:8080 {{.DOCKER_IMAGE}}

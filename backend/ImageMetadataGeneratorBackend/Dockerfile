@@ -1,0 +1,23 @@
+FROM python:3.14-slim
+
+# Install uv.
+COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /bin/
+
+# Copy the application into the container.
+COPY . /app
+
+# use nont root
+RUN useradd -m nonroot
+
+# change ownershop to nonroot user
+RUN chown -R nonroot:nonroot /app
+
+#switch to nonroot user
+USER nonroot
+
+# Install the application dependencies.
+WORKDIR /app
+RUN uv sync --frozen --no-cache
+
+# Run the application.
+CMD ["/app/.venv/bin/fastapi", "run", "/app/src/imagemetadatageneratorbackend/main.py", "--port", "8080", "--host", "0.0.0.0"]
