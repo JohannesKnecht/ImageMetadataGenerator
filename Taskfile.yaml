@@ -20,7 +20,7 @@ tasks:
   run-backend:
     dir: backend/ImageMetadataGeneratorBackend
     cmds:
-      - uv run fastapi run src/imagemetadatageneratorbackend/main.py
+      - uv run fastapi dev src/imagemetadatageneratorbackend/main.py
 
   test-backend:
     dir: backend/ImageMetadataGeneratorBackend

@@ -2,11 +2,17 @@
 
 import os
 
-from fastapi import FastAPI, HTTPException
+from fastapi import APIRouter, FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
-from pydantic import BaseModel
+
+from imagemetadatageneratorbackend.models import (
+    GeneratedMetadata,
+    MetaDataRequest,
+    MetaDataResponse,
+)
 
 app = FastAPI()
+router = APIRouter(prefix="/api/v1")
 
 origins = [
     "http://localhost",
@@ -21,24 +27,18 @@ app.add_middleware(
 )
 
 
-class RequestData(BaseModel):
-    """Request body for the image metadata generation endpoint."""
-
-    text: str
-
-
 def resource_check() -> None:
     """Verify that required environment variables are set."""
     if not os.environ.get("OPENAI_API_KEY"):
         raise HTTPException(status_code=500, detail="OPENAI_API_KEY not set")
 
 
-@app.post("/image/metadatagenerator")
-async def metadata_generator(request_data: RequestData) -> str:
+@router.post("/image/metadatagenerator")
+async def metadata_generator(metadata_request_data: MetaDataRequest) -> MetaDataResponse:
     """Generate metadata from the image.
 
     Args:
-        request_data: image
+        metadata_request_data: image
 
     Returns:
         The generated metadata
@@ -46,8 +46,14 @@ async def metadata_generator(request_data: RequestData) -> str:
     """
     resource_check()
 
-    text = request_data.text
-    if len(text) > 1000:
-        raise HTTPException(status_code=400, detail="text too long")
+    return MetaDataResponse(
+        status="success",
+        data=GeneratedMetadata(
+            image_title="tbd",
+            image_description="tbd",
+            image_sentiment=None,
+        ),
+    )
 
-    return "success"
+
+app.include_router(router)
