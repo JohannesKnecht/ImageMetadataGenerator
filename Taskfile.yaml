@@ -26,6 +26,14 @@ tasks:
     dir: backend/ImageMetadataGeneratorBackend
     cmds:
       - uv run pytest
+  image_to_base64:
+    dir: backend/ImageMetadataGeneratorBackend
+    cmds:
+      - uv run image_to_base64
+  sync:
+    dir: backend/ImageMetadataGeneratorBackend
+    cmds:
+      - uv sync
 
   lint-backend:
     dir: backend/ImageMetadataGeneratorBackend

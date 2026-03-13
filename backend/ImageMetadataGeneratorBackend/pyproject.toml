@@ -26,6 +26,7 @@ dev = [
 
 [project.scripts]
 invoke_metadata_generator = "imagemetadatageneratorbackend:invoke_metadata_generator"
+image_to_base64 = "imagemetadatageneratorbackend.helper:image_to_base64"
 
 
 
