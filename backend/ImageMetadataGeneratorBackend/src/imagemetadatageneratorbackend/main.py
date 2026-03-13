@@ -13,14 +13,15 @@ from imagemetadatageneratorbackend.models import (
     MetaDataResponse,
 )
 
-app = FastAPI()
+DEBUG = os.environ.get("DEBUG", "false").lower() == "true"
+
+app = FastAPI(debug=DEBUG)
 router = APIRouter(prefix="/api/v1")
 
 origins = [
     "http://localhost",
 ]
 
-DEBUG = os.environ.get("DEBUG", "false").lower() == "true"
 
 app.add_middleware(
     CORSMiddleware,  # type: ignore[invalid-argument-type]
@@ -68,14 +69,16 @@ async def metadata_generator(metadata_request_data: MetaDataRequest) -> MetaData
         raise HTTPException(status_code=400, detail=NO_OPTIONS)
 
     try:
-        call_vision_llm_response = call_vision_llm(image_bytes, metadata_request_data.generate_options)
+        call_vision_llm_response = call_vision_llm(
+            metadata_request_data.image_base64, metadata_request_data.generate_options
+        )
     except Exception as e:
         if isinstance(e, BadLLMResponseError):
             raise HTTPException(status_code=422, detail="Bad LLM response") from e
         elif isinstance(e, LLMServiceError):
             raise HTTPException(status_code=502, detail="LLM service error") from e
         else:
-            raise HTTPException(status_code=500, detail="Unknown error") from e
+            raise e
 
     return MetaDataResponse(
         status="success",

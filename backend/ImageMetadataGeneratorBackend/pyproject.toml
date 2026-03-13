@@ -25,7 +25,7 @@ dev = [
 
 
 [project.scripts]
-imagemetadatageneratorbackend = "imagemetadatageneratorbackend:main"
+invoke_metadata_generator = "imagemetadatageneratorbackend:invoke_metadata_generator"
 
 
 

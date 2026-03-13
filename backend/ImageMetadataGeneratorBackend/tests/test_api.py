@@ -19,7 +19,6 @@ def test_metadatagenerator_success_file():
     with open("tests/img.png", "rb") as f:
         image_b64 = base64.b64encode(f.read()).decode("utf-8")
 
-    print(image_b64)
     response = client.post(
         "/api/v1/image/metadatagenerator",
         json={
@@ -27,7 +26,7 @@ def test_metadatagenerator_success_file():
             "generate_options": {"image_description": True, "image_title": True, "image_sentiment": True},
         },
     )
-    assert response.status_code == 200
+    assert response.status_code == 200, f"failed with status code {response.status_code}: {response.text}"
     metadata_response = MetaDataResponse(**response.json())
     assert metadata_response.status.lower() == "success"
 
@@ -41,7 +40,7 @@ def test_metadatagenerator_success_str():
             "generate_options": {"image_description": True, "image_title": True, "image_sentiment": True},
         },
     )
-    assert response.status_code == 200
+    assert response.status_code == 200, f"failed with status code {response.status_code}: {response.text}"
     metadata_response = MetaDataResponse(**response.json())
     assert metadata_response.status.lower() == "success"
 
@@ -81,7 +80,7 @@ def test_metadatagenerator_config():
             "generate_options": {"image_description": True, "image_title": True, "image_sentiment": True},
         },
     )
-    assert response.status_code == 200
+    assert response.status_code == 200, f"failed with status code {response.status_code}: {response.text}"
     metadata_response = MetaDataResponse(**response.json())
     assert metadata_response.status.lower() == "success"
     assert metadata_response.data.image_description is not None
@@ -95,7 +94,7 @@ def test_metadatagenerator_config():
             "generate_options": {"image_description": True, "image_title": False, "image_sentiment": True},
         },
     )
-    assert response.status_code == 200
+    assert response.status_code == 200, f"failed with status code {response.status_code}: {response.text}"
     metadata_response = MetaDataResponse(**response.json())
     assert metadata_response.status.lower() == "success"
     assert metadata_response.data.image_description is not None
